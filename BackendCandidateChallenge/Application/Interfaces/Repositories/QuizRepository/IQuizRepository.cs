@@ -1,4 +1,5 @@
 ﻿using Core.Domain.Entity;
+using Domain.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,6 @@ namespace Application.Interfaces.Repositories.QuizRepository
     public interface IQuizRepository : IRepository<Quiz>
     {
         IEnumerable<Quiz> GetAll();
-        Quiz GetById(int id);
+        IEnumerable<QuizDto> GetQuizDetails(int quizId);
     }
 }

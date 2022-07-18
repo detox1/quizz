@@ -27,14 +27,5 @@ namespace Infrastructure.Repositories
 
             return model;
         }
-
-        public TEntity GetById(int id)
-        {
-            string sql = $"SELECT * FROM {_entityName} WHERE Id = @Id";
-
-            var model = _connection.QuerySingle<TEntity>(sql, new { Id = id});
-
-            return model;
-        }
     }
 }
