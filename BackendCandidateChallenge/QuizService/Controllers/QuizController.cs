@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using QuizService.Model;
 using QuizService.Model.Domain;
 using System.Linq;
+using Application.Interfaces.Repositories.QuizRepository;
 
 namespace QuizService.Controllers;
 
@@ -12,18 +13,20 @@ namespace QuizService.Controllers;
 public class QuizController : Controller
 {
     private readonly IDbConnection _connection;
+    private readonly IQuizRepository _quizRepository;
 
-    public QuizController(IDbConnection connection)
+    public QuizController(IDbConnection connection, IQuizRepository quizRepository)
     {
         _connection = connection;
+        _quizRepository = quizRepository;
     }
 
     // GET api/quizzes
     [HttpGet]
     public IEnumerable<QuizResponseModel> Get()
     {
-        const string sql = "SELECT * FROM Quiz;";
-        var quizzes = _connection.Query<Quiz>(sql);
+        var quizzes = _quizRepository.GetAll();
+
         return quizzes.Select(quiz =>
             new QuizResponseModel
             {
@@ -36,10 +39,10 @@ public class QuizController : Controller
     [HttpGet("{id}")]
     public object Get(int id)
     {
-        const string quizSql = "SELECT * FROM Quiz WHERE Id = @Id;";
-        var quiz = _connection.QuerySingle<Quiz>(quizSql, new {Id = id});
+        var quiz = _quizRepository.GetById(id);
         if (quiz == null)
             return NotFound();
+
         const string questionsSql = "SELECT * FROM Question WHERE QuizId = @QuizId;";
         var questions = _connection.Query<Question>(questionsSql, new {QuizId = id});
         const string answersSql = "SELECT a.Id, a.Text, a.QuestionId FROM Answer a INNER JOIN Question q ON a.QuestionId = q.Id WHERE q.QuizId = @QuizId;";

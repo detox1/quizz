@@ -2,6 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Application.Interfaces.Repositories.QuizRepository;
+using Infrastructure.Repositories.QuizRepository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.Sqlite;
@@ -24,7 +26,10 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddMvc();
+
         services.AddSingleton(InitializeDb());
+        services.AddScoped<IQuizRepository, QuizRepository>();
+
         services.AddControllers();
     }
 
