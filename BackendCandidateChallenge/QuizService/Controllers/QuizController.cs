@@ -15,6 +15,10 @@ public class QuizController : Controller
     private readonly IDbConnection _connection;
     private readonly IQuizRepository _quizRepository;
 
+    /*TODO - instead of doing dependency injection of repository pattern in controller
+                we could separate this with use cases
+                (do the dependency injection of repository into use case service and call a specific use case per action.
+                 This way logic would be more decoupled and easier to test)*/
     public QuizController(IDbConnection connection, IQuizRepository quizRepository)
     {
         _connection = connection;
